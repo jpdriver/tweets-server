@@ -38,7 +38,7 @@ app.use(require('cookie-parser')());
 app.use(require('body-parser').urlencoded({ extended: true }));
 app.use(require('express-session')({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
 
-var whitelist = ['https://tweets.now.sh'];
+var whitelist = ['https://tweets.now.sh', 'https://tweets-dev.now.sh'];
 if (process.env.NODE_ENV === "development") {
   whitelist.push('http://localhost:5000');
 }
