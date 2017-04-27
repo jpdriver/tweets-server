@@ -71,6 +71,12 @@ app.get('/login/return',
     res.redirect(config.tweetsUrl);
   });
 
+app.get('/logout',
+  function(req, res){
+    req.logout();
+    res.redirect(config.tweetsUrl);
+  });
+
 app.get('/tweets/:id*?',
   function(req, res){
     var user = req.user;
