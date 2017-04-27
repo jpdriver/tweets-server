@@ -71,7 +71,7 @@ app.get('/login/return',
     res.redirect(config.tweetsUrl);
   });
 
-app.get('/tweets/:id',
+app.get('/tweets/:id*?',
   function(req, res){
     var user = req.user;
     if (user && user._token && user._tokenSecret) {
@@ -90,12 +90,12 @@ app.get('/tweets/:id',
       }
       Twitter.get('statuses/home_timeline', params, function(error, tweets, response) {
         if(error) {
-          res.send(error);
+          res.status(400).send(error);
         }
         res.send(tweets);
       });
     } else {
-      res.send([]);
+      res.status(401).send([]);
     }
   });
 
