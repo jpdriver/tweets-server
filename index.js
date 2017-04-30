@@ -100,7 +100,11 @@ app.get('/tweets/:id*?',
       }
       Twitter.get('statuses/home_timeline', params, function(error, tweets, response) {
         if(error) {
-          res.status(400).send(error);
+          if(res.headersSent) {
+            res.send(error);
+          } else {
+            res.status(400).send(error);
+          }
         }
         res.send(tweets);
       });
