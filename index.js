@@ -38,7 +38,11 @@ app.use(require('cookie-parser')());
 app.use(require('body-parser').urlencoded({ extended: true }));
 app.use(require('express-session')({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
 
-var whitelist = ['https://tweets.now.sh', 'https://tweets-dev.now.sh'];
+var whitelist = [
+  'https://tweets.now.sh',
+  'https://tweets-dev.now.sh',
+  'https://tweets-next.now.sh'
+];
 if (process.env.NODE_ENV === "development") {
   whitelist.push('http://localhost:5000');
 }
@@ -71,7 +75,13 @@ app.get('/login/return',
     res.redirect(config.tweetsUrl);
   });
 
-app.get('/tweets/:id',
+app.get('/logout',
+  function(req, res){
+    req.logout();
+    res.redirect(config.tweetsUrl);
+  });
+
+app.get('/tweets/:id*?',
   function(req, res){
     var user = req.user;
     if (user && user._token && user._tokenSecret) {
@@ -90,12 +100,16 @@ app.get('/tweets/:id',
       }
       Twitter.get('statuses/home_timeline', params, function(error, tweets, response) {
         if(error) {
-          res.send(error);
+          if(res.headersSent) {
+            res.send(error);
+          } else {
+            res.status(400).send(error);
+          }
         }
         res.send(tweets);
       });
     } else {
-      res.send([]);
+      res.status(401).send([]);
     }
   });
 
